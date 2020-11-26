@@ -6,7 +6,6 @@ import statistics as st
 
 # Image processing
 import matplotlib.pyplot as plt
-#import cv2
 
 # Multinomial Logit
 from sklearn.linear_model import LogisticRegression
@@ -45,6 +44,9 @@ plt.xlabel('Class')
 plt.ylabel('Frequency')
 plt.show()
 
+###############################
+#####       Step 1        #####
+###############################
 # Check the max and min values of the classes in the data set
 labellist = [0] * 10
 sum = 0
@@ -77,12 +79,9 @@ for x in (data_set.columns):
   if (is_unique(data_set[x])):
     useless_variables.append(x)
 
-#data_set = data_set.drop(columns = useless_variables)
-#data_set.info()
-
-#labels = data_set.values[:, 0]
-#digits = data_set.values[:, 1:]
-
+###############################
+#####       Step 2        #####
+###############################
 # Get each pixel color value and sum it up to calculate the "ink value" of the single digit
 ink_values = []
 for digit in digits:
@@ -120,20 +119,22 @@ plt.figure(figsize = (10,7))
 
 plt.figure(figsize = (10,7))
 sn.heatmap(ink_cm, annot=True)
+plt.show()
 
-# Count contiguous pixels
+
+###############################
+#####       Step 3        #####
+###############################
+# Count continuous pixels
 pixels_count = []
 
 for d in range(len(digits)):
   count = 0
   # print(digits[d])
   for p in range(len(digits[d])):
-    # if (p+1 < len(digits[d])):
-    #   print(digits[d][p], ", next: ", digits[d][p+1])
     if (digits[d][p] > 0):
       if (p+1 < len(digits[d]) and digits[d][p+1] > 0):
         count += 1
-        # print("Contiguous")
   pixels_count.append(count)
 
 pixels_count = np.array(pixels_count)
@@ -150,19 +151,17 @@ plt.xlabel('Class')
 plt.ylabel('Number of Contiguous Pixels')
 plt.show()
 
-from sklearn.preprocessing import scale
 pixel_scaled = scale(pixels_count).reshape(-1, 1)
 
 pixel_model = LogisticRegression()
 pixel_model.fit(pixel_scaled, labels)
 pixel_preds = pixel_model.predict(pixel_scaled)
 
-from sklearn.metrics import confusion_matrix
 pixel_cm = confusion_matrix(labels, pixel_preds)
 
-import seaborn as sn
 plt.figure(figsize = (10,7))
 sn.heatmap(pixel_cm, annot=True)
+plt.show()
 
 # Count pixels that aren't white
 black = np.array([np.count_nonzero(row) for row in digits])
@@ -191,6 +190,7 @@ black_cm = confusion_matrix(labels, black_preds)
 
 plt.figure(figsize = (10,7))
 sn.heatmap(black_cm, annot=True)
+plt.show()
 
 # Count pixels that aren't white
 white = np.array([np.count_nonzero(row) for row in digits])
@@ -220,6 +220,7 @@ white_cm = confusion_matrix(labels, white_preds)
 
 plt.figure(figsize = (10,7))
 sn.heatmap(white_cm, annot=True)
+plt.show()
 
 # Count pixels that aren't white along X axis
 x_counts = []
@@ -297,9 +298,6 @@ y_title = 'Non-white pixels on Y axis for digit ' + str(digit_num)
 ax.set_title(y_title)
 plt.show()
 
-# from sklearn.preprocessing import scale
-# x_scaled = scale(x_counts).reshape(-1, 1)
-
 x_model = LogisticRegression()
 x_model.fit(x_counts, labels)
 x_preds = x_model.predict(x_counts)
@@ -308,6 +306,7 @@ x_cm = confusion_matrix(labels, x_preds)
 
 plt.figure(figsize = (10,7))
 sn.heatmap(x_cm, annot=True)
+plt.show()
 
 y_model = LogisticRegression()
 y_model.fit(y_counts, labels)
@@ -317,6 +316,7 @@ y_cm = confusion_matrix(labels, y_preds)
 
 plt.figure(figsize = (10,7))
 sn.heatmap(y_cm, annot=True)
+plt.show()
 
 xy_counts = []
 for i in range(len(digits)):
@@ -335,24 +335,4 @@ xy_cm = confusion_matrix(labels, xy_preds)
 
 plt.figure(figsize = (10,7))
 sn.heatmap(xy_cm, annot=True)
-
-x_means = []
-for sample in x_counts:
-  mean_x = 0
-  for x in sample:
-    mean_x += x
-  mean_x = mean_x / len(sample)
-  x_means.append(mean_x)
-x_means = np.array(x_means)
-
-mean_scaled = scale(x_means).reshape(-1, 1)
-
-mean_model = LogisticRegression()
-mean_model.fit(mean_scaled, labels)
-mean_preds = mean_model.predict(mean_scaled)
-
-mean_cm = confusion_matrix(labels, mean_preds)
-
-plt.figure(figsize = (10,7))
-sn.heatmap(mean_cm, annot=True)
-
+plt.show()
