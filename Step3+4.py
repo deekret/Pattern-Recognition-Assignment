@@ -130,6 +130,11 @@ y_stds = np.array(y_stds)
   plt.show()
 """
 
+y_regular = y_counts
+for i in range(len(y_counts)):
+  y_counts[i] = scale(y_counts[i])
+
+
 y_model = LogisticRegression()
 y_model.fit(y_counts, labels)
 y_preds = y_model.predict(y_counts)
@@ -138,4 +143,32 @@ y_cm = confusion_matrix(labels, y_preds)
 
 plt.figure(figsize = (10,7))
 sn.heatmap(y_cm, annot=True)
+plt.show()
+
+# Create ink feature
+ink_values = []
+for digit in digits:
+  ink = 0
+  for pixel in digit:
+    ink += pixel
+  ink_values.append(ink)
+ink_scaled = np.array(ink_values).reshape(-1, 1)
+
+# Combine the two features
+ink_y = []
+for i in range(len(digits)):
+  ink_y.append(np.concatenate((ink_scaled[i], y_regular[i])))
+ink_y = np.array(ink_y)
+
+print(ink_y.shape)
+
+# Train a new model
+ink_y_model = LogisticRegression()
+ink_y_model.fit(ink_y, labels)
+ink_y_preds = ink_y_model.predict(ink_y)
+
+ink_y_cm = confusion_matrix(labels, ink_y_preds)
+
+plt.figure(figsize = (10,7))
+sn.heatmap(ink_y_cm, annot=True)
 plt.show()
