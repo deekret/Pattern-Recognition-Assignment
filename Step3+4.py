@@ -1,28 +1,4 @@
-# General
-import pandas as pd
-import numpy as np
-# Statistics
-import statistics as st
-
-# Image processing
-import matplotlib.pyplot as plt
-
-# Multinomial Logit
-from sklearn.linear_model import LogisticRegression
-
-# Support Vector Machine
-from sklearn.svm import SVC
-
-# Neural Networks
-from sklearn.neural_network import MLPClassifier
-
-# Parameter tuning
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-
-# Load dataset of handwritten digits from URL (takes approx. 30 secs)
-import seaborn as sn
-from sklearn.metrics import confusion_matrix
-from sklearn.preprocessing import scale
+from imports import *
 
 data_set = pd.read_csv("mnist.csv")
 mnist_data = data_set.values

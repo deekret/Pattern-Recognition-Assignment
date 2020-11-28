@@ -1,0 +1,37 @@
+(X) Exploratory analysis of data
+    (X) Spot useless variables
+    (X) Consider class distribution
+    (X) Look at data statistics
+
+(X) Find a feature that quantifies "how much ink" a digit costs
+    (X) Report AVG and STD of feature within each class
+    (X) Determine which pairs of classes can be well/hardly distinguished with these statistics
+
+(X) Fit a multinomial logit model using only the "ink feature"
+    (X) Evaluate how well this model can distinguish classes ("how well can the model distinguish between the digits 1 and 8?)
+
+(X) Find another feature other than the "ink feature"
+    (X) Determine why it might discriminate well between classes
+
+(X) Perform the same analysis for this new feature as you did for the ink feature
+    (X) Report AVG and STD of feature within each class
+    (X) Determine which pairs of classes can be well/hardly distinguished with these statistics
+
+( ) Fit a multinomial logit model using both features
+    ( ) Determine if and how it improves on the single-feature models
+
+( ) Analyze data with 3 classification methods
+    (X) Draw sample for training data from dataset
+    (X) (Optional) Reduce level of detail (e.g. 14x14) by resizing input
+    ( ) Use 3 classification algorithms with different parameters and use cross-validation to select best parameters
+        regularized multinomial logit model (using the LASSO penalty)
+        support vector machines
+        feed-forward neural networks
+    ( ) For each classification method, discuss:
+        the complexity parameters of the algorithm and how the values were selected
+        the estimated accuracy of the best model for that method
+    ( ) Use remaining data to estimate accuracy of final selected model for each method
+
+( ) Discuss which classification method(s) produced the best classifier
+    ( ) Compare accuracies of models
+    ( ) Perform statistical test to find significant differences between the accuracies
