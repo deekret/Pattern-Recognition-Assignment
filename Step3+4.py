@@ -110,7 +110,7 @@ x_stds = np.array(x_stds)
 y_means = np.array(y_means)
 y_stds = np.array(y_stds)
 
-"""for c in range(1):
+"""for c in range(10):
   plt.bar(pixels, x_means[c])
   plt.plot(x_stds[c], color='yellow')
   plt.xticks(pixels)
