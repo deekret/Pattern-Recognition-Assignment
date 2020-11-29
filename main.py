@@ -113,6 +113,8 @@ ink_preds = ink_model.predict(ink_scaled)
 
 ink_cm = confusion_matrix(labels, ink_preds)
 
+print("Score for ink feature: " + str(ink_model.fit(ink_scaled, labels).score(ink_scaled, labels)))
+
 #confusion_matrix = pd.crosstab(labels, ink_preds, rownames=['Actual'], colnames=['Predicted'])
 plt.figure(figsize = (10,7))
 #sn.heatmap(confusion_matrix, annot=True)

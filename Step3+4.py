@@ -135,15 +135,17 @@ for i in range(len(y_counts)):
   y_counts[i] = scale(y_counts[i])
 
 
-y_model = LogisticRegression()
-y_model.fit(y_counts, labels)
-y_preds = y_model.predict(y_counts)
+y_model = LogisticRegression(penalty='l2', max_iter=7600)
+y_model.fit(y_regular, labels)
+y_preds = y_model.predict(y_regular)
 
 y_cm = confusion_matrix(labels, y_preds)
 
 plt.figure(figsize = (10,7))
 sn.heatmap(y_cm, annot=True)
 plt.show()
+
+print("Score for y_count feature: " + str(y_model.fit(y_counts, labels).score(y_counts, labels)))
 
 # Create ink feature
 ink_values = []
@@ -172,3 +174,5 @@ ink_y_cm = confusion_matrix(labels, ink_y_preds)
 plt.figure(figsize = (10,7))
 sn.heatmap(ink_y_cm, annot=True)
 plt.show()
+
+print("Score for ink_y_count feature: " + str(ink_y_model.fit(y_counts, labels).score(y_counts, labels)))
