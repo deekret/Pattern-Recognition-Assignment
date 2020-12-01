@@ -27,6 +27,7 @@ from sklearn.preprocessing import scale
 import cv2
 from sklearn.model_selection import cross_validate, cross_val_predict, cross_val_score
 from sklearn import metrics
+from sklearn import svm
 
 data_set = pd.read_csv("mnist.csv")
 mnist_data = data_set.values
@@ -75,6 +76,7 @@ sn.heatmap(log_cm, annot=True)
 plt.show()
 
 print("R2 score for log model:" + str(log.score(X_test, y_test)))
+print("Accuracy score for log model: " + str(metrics.accuracy_score(y_test, log_preds)))
 """
 cv_results = cross_validate(log, X_train, y_train, cv=8)
 print(cv_results.keys())
@@ -89,3 +91,57 @@ plt.figure(figsize = (10,7))
 sn.heatmap(log_cm, annot=True)
 plt.show()
 """
+
+
+svm_model = svm.SVC(kernel='poly', C=1, gamma=0.1, random_state=seed, max_iter=7600)
+svm_model.fit(X_train, y_train)
+cv_results = cross_validate(svm_model, X_train, y_train, cv=5)
+model_scores.append(cv_results)
+print("SVM model scored", str(cv_results['test_score']))
+print("Average: " + str(sum(cv_results['test_score']) / 5.0))
+
+svm_model = svm.SVC(kernel='poly', C=1000000, gamma=1, random_state=seed, max_iter=7600)
+svm_model.fit(X_train, y_train)
+cv_results = cross_validate(svm_model, X_train, y_train, cv=5)
+model_scores.append(cv_results)
+print("SVM model scored", str(cv_results['test_score']))
+print("Average: " + str(sum(cv_results['test_score']) / 5.0))
+
+
+model_scores = []
+c_values = [ 10**x for x in range(10) ]
+g_values = [0.0001, 0.001, 0.01, 0.1, 0.5, 0.7, 0.9, 1.0]
+kernel_values = ['linear', 'poly', 'rbf', 'sigmoid']
+param_grid = {'C': [0.1,1, 10, 100], 'gamma': [1,0.1,0.01,0.001],'kernel': ['rbf', 'poly', 'sigmoid']}
+
+#grid = GridSearchCV(SVC(),param_grid,refit=True,verbose=2)
+#grid.fit(X_train,y_train)
+
+#print(grid.best_estimator_)
+
+svm_model = svm.SVC(kernel='poly', gamma=1, C=0.1, random_state=seed, max_iter=7600)
+svm_model.fit(X_train, y_train)
+cv_results = cross_validate(svm_model, X_train, y_train, cv=5)
+print("SVM model  scored", str(cv_results['test_score']))
+print("Average: " + str(sum(cv_results['test_score']) / 5.0))
+
+y_preds = svm_model.predict(X_train)
+print("Accuracy: ", svm_model.score(X_test, y_test))
+
+"""
+for c in c_values:
+    for g in g_values:
+        svm_model = svm.SVC(kernel='poly', gamma=g, C=c, random_state=seed, max_iter=7600)
+        svm_model.fit(X_train, y_train)
+        cv_results = cross_validate(svm_model, X_train, y_train, cv=5)
+        model_scores.append(cv_results)
+        print("SVM model with C =", c, ",", g, "scored", str(cv_results['test_score']))
+        print("Average: " + str(sum(cv_results['test_score']) / 5.0))
+"""
+
+#svm_model = svm.SVC(kernel='rbf', gamma=0.1, C=0.001)
+
+#svm_model.fit(X_train, y_train)
+#svm_preds = svm_model.predict(X_test)
+#print("R2 score for svm model:" + str(svm_model.score(X_test, y_test)))
+#print("Accuracy score for svm model: " + str(metrics.accuracy_score(y_test, svm_preds)))
